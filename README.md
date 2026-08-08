@@ -6,6 +6,13 @@ This project implements a C++14 distributed in-memory key-value storage and load
 
 The application loads configuration from INI files, reads input records from local files, parses them according to a schema, determines the owner node for each key, stores records locally, and verifies final ownership across the cluster. The design intentionally separates configuration, schema parsing, record parsing, partitioning, storage, transfer simulation, statistics, and verification.
 
+## high-level architecture:
+[![Edit Diagram](docs/assets/architecture-v1.draw.io.svg)]
+https://drive.google.com/file/d/1rndDqnSPbsrCIpxH9hIxP88tAEYi-1TP/view?usp=sharing
+
+## Low-Level digram 
+ 
+
 ## Prerequisites
 
 - CMake 3.16+
@@ -17,9 +24,10 @@ The application loads configuration from INI files, reads input records from loc
 ```bash
 cmake -S . -B build
 cmake --build build
+```
+- Debug Build¬
 
-Debug Build
-
+```bash 
 cd /Users/admin/Documents/myapp/datastorage
 cmake -S . -B build-debug -DCMAKE_BUILD_TYPE=Debug
 cmake --build build-debug --config Debug
