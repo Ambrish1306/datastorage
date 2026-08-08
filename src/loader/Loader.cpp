@@ -109,8 +109,8 @@ void Loader::load() {
 
         std::string line;
         while (std::getline(input, line)) {
-            
-            if(line == "id,name,age" || line == "id,name,age\r") {
+             //removing the header line check to allow for more flexible input files
+            if(line == "id,name,country" || line == "id,name,age") {
                 continue; // Skip header line
             }
             processRecord(line, node.id);
