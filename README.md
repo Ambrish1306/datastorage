@@ -17,6 +17,12 @@ The application loads configuration from INI files, reads input records from loc
 ```bash
 cmake -S . -B build
 cmake --build build
+
+Debug Build
+
+cd /Users/admin/Documents/myapp/datastorage
+cmake -S . -B build-debug -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-debug --config Debug
 ```
 
 You can also use the bundled script:
