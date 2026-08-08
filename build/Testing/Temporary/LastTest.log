@@ -1,0 +1,189 @@
+Start testing: Aug 08 12:26 IST
+----------------------------------------------------------
+1/12 Testing: config_schema_test
+1/12 Test: config_schema_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/config_schema_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"config_schema_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"config_schema_test" end time: Aug 08 12:26 IST
+"config_schema_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/12 Testing: record_parser_test
+2/12 Test: record_parser_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/record_parser_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"record_parser_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"record_parser_test" end time: Aug 08 12:26 IST
+"record_parser_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/12 Testing: partitioner_test
+3/12 Test: partitioner_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/partitioner_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"partitioner_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"partitioner_test" end time: Aug 08 12:26 IST
+"partitioner_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/12 Testing: store_test
+4/12 Test: store_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/store_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"store_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"store_test" end time: Aug 08 12:26 IST
+"store_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/12 Testing: serializer_test
+5/12 Test: serializer_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/serializer_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"serializer_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"serializer_test" end time: Aug 08 12:26 IST
+"serializer_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/12 Testing: transport_test
+6/12 Test: transport_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/transport_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"transport_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"transport_test" end time: Aug 08 12:26 IST
+"transport_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/12 Testing: loader_test
+7/12 Test: loader_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/loader_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"loader_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"loader_test" end time: Aug 08 12:26 IST
+"loader_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/12 Testing: statistics_test
+8/12 Test: statistics_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/statistics_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"statistics_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"statistics_test" end time: Aug 08 12:26 IST
+"statistics_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/12 Testing: verification_test
+9/12 Test: verification_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/verification_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"verification_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"verification_test" end time: Aug 08 12:26 IST
+"verification_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/12 Testing: unit_loader_test
+10/12 Test: unit_loader_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/unit_loader_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"unit_loader_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"unit_loader_test" end time: Aug 08 12:26 IST
+"unit_loader_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/12 Testing: integration_e2e_test
+11/12 Test: integration_e2e_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/integration_e2e_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"integration_e2e_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"integration_e2e_test" end time: Aug 08 12:26 IST
+"integration_e2e_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/12 Testing: benchmark_100mb_test
+12/12 Test: benchmark_100mb_test
+Command: "/Users/admin/Documents/myapp/datastorage/build/benchmark_100mb_test"
+Directory: /Users/admin/Documents/myapp/datastorage/build
+"benchmark_100mb_test" start time: Aug 08 12:26 IST
+Output:
+----------------------------------------------------------
+Benchmark data size target: 104857600 bytes
+Records loaded: 4655644
+Records stored: 3327822
+Verification passed: yes
+Elapsed ms: 17899
+Records/sec: 260106
+<end of output>
+Test time =  20.24 sec
+----------------------------------------------------------
+Test Passed.
+"benchmark_100mb_test" end time: Aug 08 12:26 IST
+"benchmark_100mb_test" time elapsed: 00:00:20
+----------------------------------------------------------
+
+End testing: Aug 08 12:26 IST

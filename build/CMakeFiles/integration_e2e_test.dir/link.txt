@@ -1,0 +1,1 @@
+/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/integration_e2e_test.dir/tests/integration_e2e_test.cpp.o -o integration_e2e_test  libdatastorage_core.a

@@ -1,0 +1,1 @@
+/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/config_schema_test.dir/tests/config_schema_test.cpp.o -o config_schema_test  libdatastorage_core.a
