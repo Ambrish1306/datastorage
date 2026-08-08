@@ -24,7 +24,7 @@ The application loads configuration from INI files, reads input records from loc
 cmake -S . -B build
 cmake --build build
 ```
-- Debug Build¬
+## Debug Build
 
 ```bash 
 cd /Users/admin/Documents/myapp/datastorage
