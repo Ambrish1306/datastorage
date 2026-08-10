@@ -264,7 +264,7 @@ The project is considered healthy when:
 - the generated workflow is reproducible from config and scripts
 
 
-### Identified Bottlenecks. 
+## Identified Bottlenecks. 
 
 #### 1. ⚠️ **CSV Parsing** (MAJOR BOTTLENECK)
 
@@ -291,9 +291,8 @@ while (std::getline(input, line)) {
 
 **Optimization opportunities:**
 1. Use memory-mapped files (`mmap`) to avoid syscall overhead
-2. SIMD vectorization for comma detection (AVX2: process 32 chars/instruction)
-3. Pre-allocate field buffers (avoid per-record allocation)
-4. Zero-copy parsing (views instead of string copies)
+2. Pre-allocate field buffers (avoid per-record allocation)
+3. Zero-copy parsing (views instead of string copies)
 
 **Example improvement:**
 ```cpp
@@ -356,7 +355,6 @@ output.reserve(totalSize);  // Single allocation
 1. **Thread pool** for parallel file reading (one thread per node)
 2. **Producer-consumer queue** between parsing and storage
 3. **Lock-free data structures** for shared state
-4. **NUMA-aware allocation** on multi-socket systems
 
 ---
 
