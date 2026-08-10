@@ -764,35 +764,6 @@ std::bad_alloc
 
 ---
 
-## 📊 Performance Characteristics
-
-### Current Performance (Single-threaded)
-
-| Metric | Value | Notes |
-|--------|-------|-------|
-| **Throughput** | ~3,000-5,000 records/sec | Depends on hardware |
-| **Parsing** | 30-40% of runtime | CSV tokenization overhead |
-| **Hashing** | 5-10% of runtime | FNV-1a algorithm |
-| **Storage** | <5% of runtime | In-memory hash table |
-| **Serialization** | 15-20% of runtime | Only for transferred records |
-| **Memory usage** | ~200-500 bytes/record | Includes keys, fields, and structures |
-
-### Bottlenecks (See BONUS_POINTS_ANALYSIS.md for details)
-
-1. **CSV Parsing** (30-40%) - String allocations, linear scanning
-2. **Single-threaded** - Only uses 1 CPU core
-3. **Serialization** (15-20%) - Multiple string concatenations
-4. **File I/O** (10-15%) - Buffered reads with syscall overhead
-
-### Optimization Potential
-
-- **Multi-threading:** 8-64× improvement (use all CPU cores)
-- **Memory-mapped I/O:** 2-5× improvement (zero-copy)
-- **SIMD CSV parsing:** 5-10× improvement (vectorization)
-- **Combined:** 50-200× potential improvement
-
----
-
 ## 📚 Additional Documentation
 
 
@@ -963,4 +934,14 @@ output.reserve(totalSize);  // Single allocation
 3. **Lock-free data structures** for shared state
 
 ---
+## Future growth
+
+A larger deployment could evolve through:
+
+- consistent hashing instead of modulo hashing
+- explicit partition metadata exchanged between nodes
+- dynamic membership updates and rebalancing
+- batching for transport payloads
+- parallel loading with synchronized ownership tracking
+- backpressure and network congestion control
 
