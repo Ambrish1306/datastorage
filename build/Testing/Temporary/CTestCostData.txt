@@ -1,0 +1,14 @@
+config_schema_test 3 0.00148494
+record_parser_test 3 0.00125144
+partitioner_test 3 0.00107881
+store_test 3 0.000995361
+serializer_test 3 0.000902972
+transport_test 3 0.000820972
+loader_test 3 0.00174428
+statistics_test 3 0.000831583
+verification_test 3 0.00166172
+unit_loader_test 3 0.00160763
+integration_e2e_test 3 0.00198319
+benchmark_100mb_test 3 7.35866
+cli_verification_test 3 0.0121668
+---

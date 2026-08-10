@@ -19,7 +19,4 @@ if [[ ! -f "$ROOT_DIR/config/schema.ini" ]]; then
   exit 1
 fi
 
-./build/datastorage >/dev/null
-
-echo "Verification is currently validated by the project’s build and test suite."
-echo "Run: ctest --test-dir build --output-on-failure"
+./build/datastorage --cluster "$ROOT_DIR/config/cluster.ini" --schema "$ROOT_DIR/config/schema.ini"

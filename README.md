@@ -1,62 +1,91 @@
 # Distributed In-Memory Data Storage and Loader
 
-This project implements a C++14 distributed in-memory key-value storage and load pipeline with a mock clustered transport, schema-driven record parsing, deterministic ownership, verification, and large-data benchmarking.
+This project is a C++14 mock distributed data-loading system built around a configurable cluster, schema-driven record parsing, deterministic ownership, and verification. It is designed to simulate a distributed storage workflow without requiring a real multi-node network.
 
-## Project purpose
+## What the project does
 
-The application loads configuration from INI files, reads input records from local files, parses them according to a schema, determines the owner node for each key, stores records locally, and verifies final ownership across the cluster. The design intentionally separates configuration, schema parsing, record parsing, partitioning, storage, transfer simulation, statistics, and verification.
+The application:
 
-## high-level architecture:
+- loads cluster configuration from INI files
+- loads schema definitions from INI files
+- reads local CSV-style data files from each configured node
+- parses records according to the schema
+- calculates the owning node using a hash-based partitioner
+- stores records locally when the current node owns them
+- transfers records through a mock transport layer when needed
+- tracks read, store, transfer, and duplicate statistics
+- verifies that every record is on its correct owner node
+
+This is a mock cluster implementation, not a real TCP or inter-process distributed service. The "network" layer is simulated in memory and designed to model record movement between nodes.
+
+## High-level architecture
+
 ![System Architecture](docs/datastorage.drawio.png)
-
-## Low-Level digram 
- 
 
 ## Prerequisites
 
 - CMake 3.16+
 - C++14-compatible compiler
 - Unix-like environment or macOS
+- Python 3 (used by the sample data generator)
 
-## Build
+## Quick start
+
+### 1. Build the project
 
 ```bash
 cmake -S . -B build
 cmake --build build
 ```
-## Debug Build
 
-```bash 
-cd /Users/admin/Documents/myapp/datastorage
-cmake -S . -B build-debug -DCMAKE_BUILD_TYPE=Debug
-cmake --build build-debug --config Debug
-```
+### 2. Generate mock data
 
-You can also use the bundled script:
+The project includes a script to create realistic per-node input files. You can set the size in MB.
 
 ```bash
-./scripts/build.sh
+./scripts/generate_data.sh 1
 ```
 
-## Run
+This creates files under:
 
-The project includes a simple executable that initializes configuration and validates startup state:
+- `data/node1/input.csv`
+- `data/node2/input.csv`
+- `data/node3/input.csv`
+
+The generated files are intentionally larger than tiny examples and are suitable for exercising the loader pipeline.
+
+### 3. Start the mock cluster workflow
+
+```bash
+./scripts/start_cluster.sh 1
+```
+
+This script:
+
+- validates the config files
+- regenerates mock input data
+- runs the app with the cluster and schema configuration
+- prints final statistics and verification results
+
+### 4. Run the main program directly
+
+```bash
+./build/datastorage --cluster config/cluster.ini --schema config/schema.ini
+```
+
+You can also omit the arguments to use the defaults:
 
 ```bash
 ./build/datastorage
 ```
 
-## Configuration
+### 5. Run verification only
 
-Example configuration files are in `config/cluster.ini` and `config/schema.ini`.
+```bash
+./scripts/verify.sh
+```
 
-- cluster config defines node count and input file paths
-- schema config defines field order, names, and types
-- the key field is part of the schema and is used for ownership and duplicate handling
-
-## Testing
-
-Run the full validation suite:
+### 6. Run all tests
 
 ```bash
 ctest --test-dir build --output-on-failure
@@ -68,27 +97,142 @@ or:
 ./scripts/run_tests.sh
 ```
 
-## Verification
+## Configuration
 
-The verification layer checks ownership, missing records, and duplicate ownership. The project also includes the benchmark harness to validate a >100 MB load.
+The project expects configuration files in INI format.
+
+### Cluster config
+
+Example: `config/cluster.ini`
+
+```ini
+[cluster]
+node_count=3
+
+[node.1]
+id=1
+input_file=data/node1/input.csv
+
+[node.2]
+id=2
+input_file=data/node2/input.csv
+
+[node.3]
+id=3
+input_file=data/node3/input.csv
+```
+
+The loader validates:
+
+- positive node count
+- valid node IDs
+- non-empty input paths
+- matching number of configured nodes and node_count
+- duplicate IDs are rejected
+
+### Schema config
+
+Example: `config/schema.ini`
+
+```ini
+[schema]
+field_count=3
+key_field=id
+
+[field.1]
+name=id
+type=int32
+
+[field.2]
+name=name
+type=string
+
+[field.3]
+name=country
+type=string
+```
+
+Supported field types:
+
+- `string`
+- `int32`
+
+The key field is used for partitioning and duplicate detection.
+
+## Data model
+
+The record model is generic and schema-driven rather than hard-coded for one table structure.
+
+The key design points are:
+
+- schema describes field order, field names, and types
+- record parsing is based on the schema definition
+- each parsed record stores a key/value representation for ownership decisions
+- additional field types can be added later without rewriting the whole pipeline
+
+## Runtime behavior and workflow
+
+The sequence is:
+
+1. Read cluster config
+2. Read schema config
+3. Build node store and mock transport structures
+4. Load each node's local CSV input file
+5. Parse each row into a typed record
+6. Compute record owner using deterministic hashing
+7. Store the record on the owning node
+8. If the current node is not the owner, queue the transfer via the mock transport
+9. Count valid, invalid, duplicate, and transferred records
+10. Run ownership verification across all node stores
+11. Print the final summary
+
+## Statistics and verification
+
+The app prints statistics including:
+
+- total records read
+- valid records
+- invalid records
+- duplicate records
+- records stored
+- records transferred
+- records received
+- per-node record counts
+
+The verification phase confirms:
+
+- no incorrect owners
+- no missing records
+- no duplicate owners
+
+Example output:
+
+```text
+Verification result: PASS
+  Records checked: 34542
+  Incorrect owner: 0
+  Missing records: 0
+  Duplicate owners: 0
+```
+
+## Benchmark
+
+The repository includes a 100MB+ benchmark test that generates temporary benchmark files and verifies the full load pipeline.
 
 ```bash
 ./build/benchmark_100mb_test
 ```
 
-or:
+This benchmark is also included in the CTest suite.
 
-```bash
-./scripts/verify.sh
-```
+## Project structure
 
-## Generated sample data
-
-The repository includes a small sample generation script:
-
-```bash
-./scripts/generate_data.sh
-```
+- `config/`: cluster and schema configuration files
+- `data/`: generated mock node input data
+- `include/`: public headers for the core components
+- `src/`: implementation for config, parsing, storage, network, loader, verification
+- `tests/`: unit and integration tests
+- `scripts/`: build, generation, cluster start, verification helpers
 
 ## Architecture summary
 
@@ -100,24 +244,22 @@ The repository includes a small sample generation script:
 - `network/Transport`: mock transport with queue semantics
 - `serialization/Serializer`: length-aware binary format for transfer payloads
 - `loader/Loader`: orchestration of the loading pipeline
-- `statistics/Statistics`: read/store/transfer metrics
+- `statistics/Statistics`: metrics and counters
 - `verification/Verification`: final ownership verification
 
-## Benchmark notes
+## Notes
 
-The project includes a 100MB+ load benchmark that exercises the real pipeline end-to-end. Measured results in this environment indicate roughly 235k records/sec with verification passing.
-
-## Documentation
-
-Additional docs in the `docs/` directory cover:
-
-- architecture
-- design decisions
-- algorithms
-- performance
-- scalability
+- This project intentionally simulates a distributed workflow in-process.
+- It is designed for learning, validation, and benchmarking, not for production-grade multi-host deployment.
+- The internal mock transport is suitable for demonstrating partitioning, ownership, and transfer logic.
 
 ## Quality gate
 
-This project is considered complete when the build succeeds, all tests pass, the benchmark passes, and verification returns zero incorrect or missing owners.
+The project is considered healthy when:
+
+- the project builds without errors
+- all tests pass in CTest
+- the benchmark passes
+- verification reports zero incorrect or missing owners
+- the generated workflow is reproducible from config and scripts
 

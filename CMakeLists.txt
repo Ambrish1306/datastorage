@@ -89,6 +89,18 @@ if(BUILD_TESTING)
     target_link_libraries(integration_e2e_test PRIVATE datastorage_core)
     add_test(NAME integration_e2e_test COMMAND integration_e2e_test)
 
+    add_test(NAME cli_verification_test
+        COMMAND bash -lc
+        "tmpdir=$(mktemp -d); \
+        cat > \"$tmpdir/cluster.ini\" <<'EOF'\n[cluster]\nnode_count=2\n\n[node.1]\nid=1\ninput_file=$tmpdir/node1.csv\n\n[node.2]\nid=2\ninput_file=$tmpdir/node2.csv\nEOF\n        cat > \"$tmpdir/schema.ini\" <<'EOF'\n[schema]\nkey_field=id\nfield_count=2\n\n[field.1]\nname=id\ntype=int32\n\n[field.2]\nname=name\ntype=string\nEOF\n        printf '1,alice\\n2,bob\\n' > \"$tmpdir/node1.csv\"; \
+        printf '3,charlie\\n4,dana\\n' > \"$tmpdir/node2.csv\"; \
+        ${CMAKE_BINARY_DIR}/datastorage --cluster \"$tmpdir/cluster.ini\" --schema \"$tmpdir/schema.ini\" > \"$tmpdir/output.txt\"; \
+        grep -q 'Verification result:' \"$tmpdir/output.txt\"; \
+        grep -q 'Records checked:' \"$tmpdir/output.txt\"; \
+        grep -q 'Incorrect owner:' \"$tmpdir/output.txt\"; \
+        rm -rf \"$tmpdir\""
+    )
+
     add_executable(benchmark_100mb_test tests/benchmark_100mb_test.cpp)
     target_link_libraries(benchmark_100mb_test PRIVATE datastorage_core)
     add_test(NAME benchmark_100mb_test COMMAND benchmark_100mb_test)

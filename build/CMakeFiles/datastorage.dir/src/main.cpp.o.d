@@ -794,6 +794,7 @@ CMakeFiles/datastorage.dir/src/main.cpp.o: \
   /Users/admin/Documents/myapp/datastorage/include/partition/Partitioner.h \
   /Users/admin/Documents/myapp/datastorage/include/record/Record.h \
   /Users/admin/Documents/myapp/datastorage/include/storage/Store.h \
+  /Users/admin/Documents/myapp/datastorage/include/verification/Verification.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/istream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h \
