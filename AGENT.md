@@ -117,43 +117,6 @@ Use clear separation between:
 11. Verification
 12. Application/Orchestration
 
-Suggested high-level architecture:
-
-    +----------------------+
-    |      Application      |
-    +----------+-----------+
-               |
-       +-------+-------+
-       |               |
-       v               v
- Configuration     Load Manager
-                       |
-             +---------+---------+
-             |                   |
-             v                   v
-        Data Reader          Partitioning
-             |                   |
-             v                   v
-          Parser             Owner Node
-                                 |
-                       +---------+---------+
-                       |                   |
-                       v                   v
-                    Local              Network
-                    Storage            Transport
-                       |                   |
-                       +---------+---------+
-                                 |
-                                 v
-                            Statistics
-                                 |
-                                 v
-                            Verification
-
-
-The application orchestration layer should not contain low-level
-parsing, storage, networking or partitioning logic.
-
 ---
 
 # 5. Suggested Directory Structure
@@ -1404,51 +1367,3 @@ After implementation verify:
     unit tests
     integration tests
     end-to-end test
-
----
-
-# 39. Definition of Done
-
-A feature is complete only when:
-
-- code compiles
-- warnings are addressed
-- unit tests pass
-- integration tests pass where applicable
-- error cases are handled
-- ownership is clear
-- configuration is not hard-coded
-- documentation is updated
-- performance implications are understood
-- code follows project architecture
-
----
-
-# 40. Final Quality Gate
-
-Before submission, verify:
-
-[ ] C++14 compatible
-[ ] CMake build works
-[ ] Clean build works
-[ ] Unit tests pass
-[ ] Integration tests pass
-[ ] End-to-end test passes
-[ ] 100MB+ input tested
-[ ] 1 node tested
-[ ] 2 nodes tested
-[ ] 3 nodes tested
-[ ] 5 nodes tested
-[ ] Duplicate records tested
-[ ] Invalid records tested
-[ ] Invalid configuration tested
-[ ] Statistics verified
-[ ] Ownership verification passes
-[ ] No hard-coded topology
-[ ] No hard-coded schema
-[ ] No memory leaks
-[ ] Exception safety reviewed
-[ ] Documentation complete
-[ ] Build/run scripts tested
-[ ] Performance benchmark documented
-[ ] Scalability discussion documented
