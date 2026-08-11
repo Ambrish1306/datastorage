@@ -566,11 +566,17 @@ input_file=data/node3/input.csv
 
 The loader validates:
 
-- positive node count
+- positive node count (1-5 range enforced for architectural limits)
 - valid node IDs
 - non-empty input paths
 - matching number of configured nodes and node_count
 - duplicate IDs are rejected
+
+**Node ID flexibility:**
+- Node IDs can be any positive integers (e.g., `1, 2, 3` or `10, 25, 100`)
+- They do NOT need to be sequential or start at 1
+- The system correctly maps partitioner indices (0-based) to configured node IDs
+- This allows flexible cluster configurations without renumbering nodes
 
 ### Schema config
 

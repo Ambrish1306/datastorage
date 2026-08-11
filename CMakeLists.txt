@@ -85,6 +85,10 @@ if(BUILD_TESTING)
     target_link_libraries(unit_loader_test PRIVATE datastorage_core)
     add_test(NAME unit_loader_test COMMAND unit_loader_test)
 
+    add_executable(node_id_flexibility_test tests/node_id_flexibility_test.cpp)
+    target_link_libraries(node_id_flexibility_test PRIVATE datastorage_core)
+    add_test(NAME node_id_flexibility_test COMMAND node_id_flexibility_test)
+
     add_executable(integration_e2e_test tests/integration_e2e_test.cpp)
     target_link_libraries(integration_e2e_test PRIVATE datastorage_core)
     add_test(NAME integration_e2e_test COMMAND integration_e2e_test)
