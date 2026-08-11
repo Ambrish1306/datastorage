@@ -37,19 +37,62 @@ This project is a C++14 mock distributed data-loading system built around a conf
 
 ## What the project does
 
-The application:
+This project implements a **mock distributed data-loading system** that simulates the behavior of a multi-node cluster within a single process. It follows the standard distributed loading workflow but executes all operations in-memory for testing and validation purposes.
 
-- loads cluster configuration from INI files
-- loads schema definitions from INI files
-- reads local CSV-style data files from each configured node
-- parses records according to the schema
-- calculates the owning node using a hash-based partitioner
-- stores records locally when the current node owns them
-- transfers records through a mock transport layer when needed
-- tracks read, store, transfer, and duplicate statistics
-- verifies that every record is on its correct owner node
+### Loading Process (Client Requirements)
 
-This is a mock cluster implementation, not a real TCP or inter-process distributed service. The "network" layer is simulated in memory and designed to model record movement between nodes.
+The system follows these steps as specified:
+
+1. **Schema Setup**: Use config file (`schema.ini`) to specify the schema with supported data types: `string`, `int32`
+2. **Data Preparation**: Prepare data files on mock nodes in the cluster (supports 100MB+ per file, handles duplicates)
+3. **Cluster Start**: Initialize all mock node stores and transport structures (simulated in single process)
+4. **Local Reading**: Every node reads its local data file existing on the cluster nodes
+5. **Record Transfer**: Nodes store local records OR transfer them to the specific node that owns that record based on distribution logic (hash-based partitioning)
+6. **Statistics**: Once the load job finishes, print statistics including total records loaded per node
+7. **Verification**: Provide output confirming successful loading and evidence that records are stored on their corresponding owned nodes
+
+### Key Features
+
+- ✅ Schema-driven record parsing (configurable fields and types)
+- ✅ Deterministic hash-based partitioning (records owned by specific nodes)
+- ✅ Duplicate detection and handling
+- ✅ Mock network transport layer (simulates record transfers)
+- ✅ Per-node statistics tracking
+- ✅ Ownership verification (ensures records on correct nodes)
+- ✅ Supports 100MB+ data files per node
+
+### Mock Architecture vs Real Distributed System
+
+**This implementation is a MOCK cluster** that simulates distributed behavior:
+
+| Aspect | Real Distributed System | This Mock System |
+|--------|------------------------|------------------|
+| **Process model** | Multiple processes/machines | Single process, multiple simulated nodes |
+| **Storage** | Each node has separate storage | All node stores in same memory space (`stores_[0]`, `stores_[1]`, etc.) |
+| **Record placement** | Store locally first, then send over network | Directly write to owner node's store via memory access |
+| **Network** | Real TCP/sockets, serialization, network I/O | Mock transport that tracks what would be sent |
+| **Verification** | Query remote nodes over network | Direct access to all stores in memory |
+
+**Why mock architecture?**
+- ✅ Test partitioning logic without network complexity
+- ✅ Fast execution (no network overhead)
+- ✅ Deterministic behavior (no network failures)
+- ✅ Easy verification (all data accessible)
+- ✅ Perfect for development and testing
+
+**Note**: While the mock system simulates the workflow, the end result matches a real distributed system: records are partitioned across nodes based on deterministic hashing, and verification confirms correct ownership.
+
+### Compliance with Client Requirements
+
+| Requirement | Implementation | Location |
+|-------------|----------------|----------|
+| **1. Schema Setup** | Config-driven schema loader, supports `string` and `int32` types | `config/schema.ini`, [SchemaLoader](include/core/Schema.h) |
+| **2. Data Preparation** | Python generator creates 100MB+ CSV files per node, supports duplicates | `scripts/generate_data.sh` |
+| **3. Cluster Start** | Initializes all node stores and transport in single process | [Loader constructor](src/loader/Loader.cpp#L29-L45) |
+| **4. Local Reading** | Each node reads its configured `input_file` from cluster config | [Loader::load()](src/loader/Loader.cpp#L108-L136) |
+| **5. Record Transfer** | Hash-based ownership, stores on owner + simulates transfer if remote | [Loader::processRecord()](src/loader/Loader.cpp#L68-L100) |
+| **6. Statistics** | Prints per-node record counts and transfer statistics | [LoadStats](include/loader/Loader.h#L16-L24), [Statistics::print()](src/statistics/Statistics.cpp) |
+| **7. Verification** | Validates all records stored on correct owner nodes | [Verification::verify()](src/verification/Verification.cpp) |
 
 ## High-level architecture
 
@@ -571,19 +614,66 @@ The key design points are:
 
 ## Runtime behavior and workflow
 
-The sequence is:
+The system implements the client-specified loading process:
 
-1. Read cluster config
-2. Read schema config
-3. Build node store and mock transport structures
-4. Load each node's local CSV input file
-5. Parse each row into a typed record
-6. Compute record owner using deterministic hashing
-7. Store the record on the owning node
-8. If the current node is not the owner, queue the transfer via the mock transport
-9. Count valid, invalid, duplicate, and transferred records
-10. Run ownership verification across all node stores
-11. Print the final summary
+### Step-by-Step Execution
+
+**1. Schema Setup**
+   - Load schema configuration from `config/schema.ini`
+   - Parse field definitions (name, type: `string` or `int32`)
+   - Identify key field for partitioning
+   - Build schema-driven record parser
+
+**2. Data Preparation** (prerequisite)
+   - Data files prepared on mock nodes (e.g., `data/node1/input.csv`)
+   - Files can be 100MB+ each
+   - May contain duplicate records (handled during loading)
+
+**3. Cluster Start**
+   - Load cluster configuration from `config/cluster.ini`
+   - Initialize node stores (one per configured node)
+   - Initialize mock transport structures (simulate network)
+   - Build node-to-index mapping for record routing
+
+**4. Local Reading**
+   - Each node reads its local CSV data file
+   - Files processed line-by-line with schema-based header detection
+   - Empty lines skipped, malformed records logged as invalid
+
+**5. Record Transfer Logic**
+   - Parse each record according to schema
+   - Calculate owning node using deterministic hash: `hash(key) % nodeCount`
+   - **If current node owns the record**: Store directly in local store
+   - **If remote node owns the record**: Store in owner's store + simulate network transfer via mock transport
+   - Duplicates detected (key already exists) and counted but not stored again
+   - Track statistics: recordsRead, validRecords, invalidRecords, duplicateRecords, recordsStored, recordsTransferred
+
+**6. Statistics Output**
+   - After all nodes complete loading, print comprehensive statistics:
+     - Total records read per node
+     - Total records stored per node
+     - Records transferred between nodes
+     - Duplicate and invalid record counts
+   - Per-node breakdown showing data distribution
+
+**7. Verification**
+   - Iterate through all stored records on all nodes
+   - Recalculate expected owner for each record
+   - Confirm record is stored on its correct owner node
+   - Report verification results:
+     - ✅ PASS: All records on correct nodes
+     - ❌ FAIL: Found incorrect owners, missing records, or duplicates across nodes
+   - Output includes: records checked, incorrect owners, missing records, duplicate owners
+
+### Implementation Details (Mock Behavior)
+
+In this mock implementation:
+- All node stores exist in the same process memory
+- "Transfer" means: `stores_[ownerIndex]->put(record)` + `transports_[localIndex].send(payload)` for tracking
+- No actual network I/O or inter-process communication occurs
+- Verification works by direct memory access to all stores
+
+The mock achieves the same logical end state as a real distributed system: records correctly partitioned across nodes based on deterministic ownership.
 
 ## Statistics and verification
 
