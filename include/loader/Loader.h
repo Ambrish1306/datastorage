@@ -39,6 +39,7 @@ private:
     static std::string trim(const std::string& value);
     void initializeStores();
     void processRecord(const std::string& line, std::int32_t nodeId);
+    std::string buildExpectedHeader() const;
 
     ClusterConfig clusterConfig_;
     Schema schema_;

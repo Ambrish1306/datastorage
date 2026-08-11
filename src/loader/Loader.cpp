@@ -99,7 +99,21 @@ void Loader::processRecord(const std::string& line, std::int32_t nodeId) {
     }
 }
 
+std::string Loader::buildExpectedHeader() const {
+    if (schema_.fields.empty()) {
+        return "";
+    }
+    
+    std::string header = schema_.fields[0].name;
+    for (std::size_t i = 1; i < schema_.fields.size(); ++i) {
+        header += "," + schema_.fields[i].name;
+    }
+    return header;
+}
+
 void Loader::load() {
+    const std::string expectedHeader = buildExpectedHeader();
+    
     for (std::size_t i = 0; i < clusterConfig_.nodes.size(); ++i) {
         const NodeConfig& node = clusterConfig_.nodes[i];
         std::ifstream input(node.inputFile.c_str());
@@ -108,10 +122,14 @@ void Loader::load() {
         }
 
         std::string line;
+        bool firstLine = true;
         while (std::getline(input, line)) {
-             //removing the header line check to allow for more flexible input files
-            if(line == "id,name,country" || line == "id,name,age") {
-                continue; // Skip header line
+            // Check if first line matches schema field names
+            if (firstLine) {
+                firstLine = false;
+                if (trim(line) == expectedHeader) {
+                    continue; // Skip header line
+                }
             }
             processRecord(line, node.id);
         }
