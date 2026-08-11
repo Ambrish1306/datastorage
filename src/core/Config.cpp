@@ -124,8 +124,13 @@ void Config::loadFromFile(const std::string& clusterPath) {
         }
     }
 
+    // Enforce architectural limits: cluster size must be between 1 and 5 nodes
     if (config.nodeCount <= 0) {
         throw std::runtime_error("Invalid cluster configuration: node_count must be positive");
+    }
+    
+    if (config.nodeCount > 5) {
+        throw std::runtime_error("Invalid cluster configuration: node_count must not exceed 5 (architectural limit)");
     }
 
     if (!nodes.empty()) {

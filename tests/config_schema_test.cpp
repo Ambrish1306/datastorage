@@ -63,6 +63,50 @@ int main() {
     }
     assert(invalidCluster);
 
+    // Test upper bound validation: node_count must not exceed 5
+    writeFile("test_cluster_too_large.ini",
+              "[cluster]\n"
+              "node_count=6\n\n"
+              "[node.1]\nid=1\ninput_file=data/node1/input.csv\n\n"
+              "[node.2]\nid=2\ninput_file=data/node2/input.csv\n\n"
+              "[node.3]\nid=3\ninput_file=data/node3/input.csv\n\n"
+              "[node.4]\nid=4\ninput_file=data/node4/input.csv\n\n"
+              "[node.5]\nid=5\ninput_file=data/node5/input.csv\n\n"
+              "[node.6]\nid=6\ninput_file=data/node6/input.csv\n");
+
+    bool clusterTooLarge = false;
+    try {
+        datastorage::Config tooLarge("test_cluster_too_large.ini");
+        (void)tooLarge;
+    } catch (const std::runtime_error&) {
+        clusterTooLarge = true;
+    }
+    assert(clusterTooLarge);
+
+    // Test boundary: node_count=5 should be valid
+    writeFile("test_cluster_max_valid.ini",
+              "[cluster]\n"
+              "node_count=5\n\n"
+              "[node.1]\nid=1\ninput_file=data/node1/input.csv\n\n"
+              "[node.2]\nid=2\ninput_file=data/node2/input.csv\n\n"
+              "[node.3]\nid=3\ninput_file=data/node3/input.csv\n\n"
+              "[node.4]\nid=4\ninput_file=data/node4/input.csv\n\n"
+              "[node.5]\nid=5\ninput_file=data/node5/input.csv\n");
+
+    datastorage::Config maxValid("test_cluster_max_valid.ini");
+    assert(maxValid.cluster().nodeCount == 5);
+    assert(maxValid.cluster().nodes.size() == 5u);
+
+    // Test boundary: node_count=1 should be valid
+    writeFile("test_cluster_min_valid.ini",
+              "[cluster]\n"
+              "node_count=1\n\n"
+              "[node.1]\nid=1\ninput_file=data/node1/input.csv\n");
+
+    datastorage::Config minValid("test_cluster_min_valid.ini");
+    assert(minValid.cluster().nodeCount == 1);
+    assert(minValid.cluster().nodes.size() == 1u);
+
     writeFile("test_schema_invalid.ini",
               "[schema]\n"
               "key_field=id\n\n"
