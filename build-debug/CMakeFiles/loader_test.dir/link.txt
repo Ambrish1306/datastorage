@@ -1,1 +1,0 @@
-/usr/bin/c++ -g -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/loader_test.dir/tests/loader_test.cpp.o -o loader_test  libdatastorage_core.a

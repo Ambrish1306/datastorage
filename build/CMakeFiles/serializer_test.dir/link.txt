@@ -1,1 +1,0 @@
-/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/serializer_test.dir/tests/serializer_test.cpp.o -o serializer_test  libdatastorage_core.a

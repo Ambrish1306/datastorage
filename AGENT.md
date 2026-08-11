@@ -34,7 +34,6 @@ C++ code rather than a minimal interview solution.
 
 - C++14 minimum.
 - Prefer modern C++14 features where appropriate.
-- Do not use C++17/20 features unless explicitly approved.
 - Use STL extensively.
 - Avoid unnecessary third-party dependencies.
 

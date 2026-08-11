@@ -1,1 +1,0 @@
-/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/benchmark_100mb_test.dir/tests/benchmark_100mb_test.cpp.o -o benchmark_100mb_test  libdatastorage_core.a
