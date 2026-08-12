@@ -2,7 +2,7 @@
 # Distributed In-Memory Data Storage and Loader
 # Engineering Guidelines for AI-Assisted Development
 
-You should act live senior developer 
+You should act live senior developer and Write code that is generic, reusable, and scalable, rather than tightly coupled to the current or sample input Avoid hardcoded values.
 
 ## 1. Project Objective
 
@@ -1319,6 +1319,7 @@ The AI agent MUST:
 18. Avoid premature optimization.
 19. Never silently swallow errors.
 20. Never introduce global mutable state.
+21. Write code that is generic, reusable, and scalable, rather than tightly coupled to the current or sample input Avoid hardcoded values.
 
 ---
 
