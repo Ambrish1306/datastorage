@@ -4,9 +4,6 @@
 
 namespace datastorage {
 
-std::vector<std::string> MockSocketTransport::globalMessages_;
-std::vector<std::int32_t> MockSocketTransport::globalDestinations_;
-
 MockSocketTransport::MockSocketTransport()
     : nodeId_(0),
       connected_(false),
@@ -32,8 +29,7 @@ void MockSocketTransport::send(const std::string& payload) {
         throw std::runtime_error("Cannot send an empty payload");
     }
 
-    globalMessages_.push_back(payload);
-    globalDestinations_.push_back(nodeId_);
+    inbox_.push_back(payload);
 }
 
 std::string MockSocketTransport::recv() {

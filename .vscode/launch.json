@@ -6,12 +6,15 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build-debug/datastorage",
-      "args": [],
+      "args": [
+        "--cluster",
+        "config/cluster.ini",
+        "--schema",
+        "config/schema.ini"
+      ],
       "cwd": "${workspaceFolder}",
-      "stopAtEntry": true,
+      "stopAtEntry": false,
       "MIMode": "lldb",
-      "externalConsole": false
-    }
-  ]
-}
+      "externalConsole": false,
+      "preLaunchTask": "Build Debug"
  

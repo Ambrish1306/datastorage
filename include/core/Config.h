@@ -15,6 +15,7 @@ struct ClusterConfig {
     int nodeCount = 0;
     std::vector<NodeConfig> nodes;
 };
+//ClusterConfig cluster; cluster.nodes.push_back({1, "node1.txt"});
 
 class Config {
 public:

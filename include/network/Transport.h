@@ -35,8 +35,6 @@ private:
     std::int32_t nodeId_;
     bool connected_;
     std::vector<std::string> inbox_;
-    static std::vector<std::string> globalMessages_;
-    static std::vector<std::int32_t> globalDestinations_;
 };
 
 }  // namespace datastorage
