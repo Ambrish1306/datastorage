@@ -166,9 +166,10 @@ void Loader::load() {
             }
             processRecord(line, node.id);
         }
-    }
 
-    deliverQueuedRecords();
+        // Deliver before the next node reads so its dedup check sees records already routed here.
+        deliverQueuedRecords();
+    }
 }
 
 const LoadStats& Loader::stats() const noexcept {

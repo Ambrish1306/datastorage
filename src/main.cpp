@@ -56,7 +56,7 @@ void printStatistics(const datastorage::Loader& loader, const datastorage::Clust
     std::cout << "  Valid records: " << stats.validRecords << '\n';
     std::cout << "  Invalid records: " << stats.invalidRecords << '\n';
     std::cout << "  Duplicate records: " << stats.duplicateRecords << '\n';
-    std::cout << "  Records stored: " << stats.recordsStored << '\n';
+    std::cout << "  Records stored(unique records kept in storage): " << stats.recordsStored << '\n';
     std::cout << "  Records transferred: " << stats.recordsTransferred << '\n';
     std::cout << "  Records received: " << stats.recordsReceived << '\n';
     std::cout << "  Records loaded per node:\n";
