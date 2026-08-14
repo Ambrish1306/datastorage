@@ -50,6 +50,7 @@ private:
     std::vector<std::unique_ptr<IKeyValueStore>> stores_;
     std::vector<MockSocketTransport> transports_;
     LoadStats stats_;
+    std::size_t traceCount_;
 };
 
 }  // namespace datastorage

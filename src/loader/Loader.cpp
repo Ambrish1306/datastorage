@@ -36,7 +36,8 @@ Loader::Loader(const ClusterConfig& clusterConfig, const Schema& schema, const I
       nodeToIndex_(),
       stores_(),
       transports_(),
-      stats_() {
+      stats_(),
+      traceCount_(0u) {
     if (clusterConfig_.nodeCount <= 0) {
         throw std::runtime_error("Loader requires a positive node count");
     }
@@ -82,12 +83,16 @@ void Loader::processRecord(const std::string& line, std::int32_t nodeId) {
 
         ++stats_.recordsRead;
         ++stats_.validRecords;
-        std::cout << "| key=" << record.key
-                  << " | current_node=" << nodeId
-                  << " | destination_node=" << ownerNodeId
-                  << " | hash=" << hash
-                  << " | owner_index(hash % nodeCount)=" << ownerIndex
-                  << " |" << '\n';
+
+        if (traceCount_ < 3u && ownerNodeId != nodeId) {
+            std::cout << "| key=" << record.key
+                      << " | current_node=" << nodeId
+                      << " | destination_node=" << ownerNodeId
+                      << " | hash=" << hash
+                      << " | owner_index(hash % nodeCount)=" << ownerIndex
+                      << " |" << '\n';
+            ++traceCount_;
+        }
 
         if (stores_[ownerIndex]->contains(record.key)) {
             ++stats_.duplicateRecords;
