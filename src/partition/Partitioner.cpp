@@ -25,23 +25,25 @@ namespace datastorage {
  * 
  * Memory efficiency: operates on key bytes in-place, no temporary buffers
  */
-NodeId ModuloPartitioner::owner(const Record& record, std::int32_t nodeCount) const {
-    if (nodeCount <= 0) {
-        throw std::runtime_error("nodeCount must be positive for partitioning");
-    }
+std::uint64_t ModuloPartitioner::hashValue(const Record& record) const {
     if (record.key.empty()) {
         throw std::runtime_error("Record key is missing; cannot determine ownership");
     }
 
-    // FNV-1a hash implementation
-    std::uint64_t hashValue = 14695981039346656037ull;  // FNV offset basis (64-bit)
+    std::uint64_t hash = 14695981039346656037ull;
     for (std::size_t i = 0; i < record.key.size(); ++i) {
-        hashValue ^= static_cast<unsigned char>(record.key[i]);  // XOR with byte
-        hashValue *= 1099511628211ull;  // Multiply by FNV prime
+        hash ^= static_cast<unsigned char>(record.key[i]);
+        hash *= 1099511628211ull;
+    }
+    return hash;
+}
+
+NodeId ModuloPartitioner::owner(const Record& record, std::int32_t nodeCount) const {
+    if (nodeCount <= 0) {
+        throw std::runtime_error("nodeCount must be positive for partitioning");
     }
 
-    // Modulo mapping to determine owner node
-    return static_cast<NodeId>(hashValue % static_cast<std::uint64_t>(nodeCount));
+    return static_cast<NodeId>(hashValue(record) % static_cast<std::uint64_t>(nodeCount));
 }
 
 }  // namespace datastorage

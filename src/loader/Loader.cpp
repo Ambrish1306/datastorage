@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 
@@ -77,9 +78,16 @@ void Loader::processRecord(const std::string& line, std::int32_t nodeId) {
         const NodeId owner = partitioner_.owner(record, clusterConfig_.nodeCount);
         const std::size_t ownerIndex = static_cast<std::size_t>(owner);
         const std::int32_t ownerNodeId = clusterConfig_.nodes[ownerIndex].id;
+        const std::uint64_t hash = partitioner_.hashValue(record);
 
         ++stats_.recordsRead;
         ++stats_.validRecords;
+        std::cout << "| key=" << record.key
+                  << " | current_node=" << nodeId
+                  << " | destination_node=" << ownerNodeId
+                  << " | hash=" << hash
+                  << " | owner_index(hash % nodeCount)=" << ownerIndex
+                  << " |" << '\n';
 
         if (stores_[ownerIndex]->contains(record.key)) {
             ++stats_.duplicateRecords;
