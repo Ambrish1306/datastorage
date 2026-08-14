@@ -73,11 +73,10 @@ void Loader::processRecord(const std::string& line, std::int32_t nodeId) {
 
     try {
         const Record record = parser_.parse(line);
-        
-        // Partitioner returns 0-based index (0, 1, 2, ...)
+
         const NodeId owner = partitioner_.owner(record, clusterConfig_.nodeCount);
         const std::size_t ownerIndex = static_cast<std::size_t>(owner);
-        const std::size_t localIndex = nodeToIndex_.at(nodeId);
+        const std::int32_t ownerNodeId = clusterConfig_.nodes[ownerIndex].id;
 
         ++stats_.recordsRead;
         ++stats_.validRecords;
@@ -87,21 +86,36 @@ void Loader::processRecord(const std::string& line, std::int32_t nodeId) {
             return;
         }
 
-        stores_[ownerIndex]->put(record.key, record);
-        ++stats_.recordsStored;
-
-        // Fix: Compare actual node IDs, not array indices vs node IDs
-        // Get the actual configured node ID that owns this record
-        const std::int32_t ownerNodeId = clusterConfig_.nodes[ownerIndex].id;
-        
-        if (ownerNodeId != nodeId) {
-            std::string payload = Serializer::serialize(record);
-            transports_[localIndex].connect(nodeId);
-            transports_[localIndex].send(payload);
-            ++stats_.recordsTransferred;
+        if (ownerNodeId == nodeId) {
+            stores_[ownerIndex]->put(record.key, record);
+            ++stats_.recordsStored;
+            return;
         }
+
+        std::string payload = Serializer::serialize(record);
+        transports_[ownerIndex].connect(ownerNodeId);
+        transports_[ownerIndex].send(payload);
+        ++stats_.recordsTransferred;
     } catch (const std::exception&) {
         ++stats_.invalidRecords;
+    }
+}
+
+void Loader::deliverQueuedRecords() {
+    for (std::size_t ownerIndex = 0; ownerIndex < transports_.size(); ++ownerIndex) {
+        while (transports_[ownerIndex].queuedMessages() > 0u) {
+            const std::string payload = transports_[ownerIndex].recv();
+            const Record record = Serializer::deserialize(payload);
+
+            if (stores_[ownerIndex]->contains(record.key)) {
+                ++stats_.duplicateRecords;
+                continue;
+            }
+
+            stores_[ownerIndex]->put(record.key, record);
+            ++stats_.recordsStored;
+            ++stats_.recordsReceived;
+        }
     }
 }
 
@@ -140,6 +154,8 @@ void Loader::load() {
             processRecord(line, node.id);
         }
     }
+
+    deliverQueuedRecords();
 }
 
 const LoadStats& Loader::stats() const noexcept {
