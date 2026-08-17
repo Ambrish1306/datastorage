@@ -1,0 +1,156 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 ArialMT;\f1\froman\fcharset0 Times-Roman;\f2\froman\fcharset0 Times-Bold;
+\f3\fswiss\fcharset0 Arial-BoldMT;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red83\green83\blue83;\red0\green0\blue233;
+\red16\green60\blue192;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c40000\c40000\c40000;\cssrgb\c0\c0\c93333;
+\cssrgb\c6667\c33333\c80000;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid1\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid101\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid102\'01\'01;}{\levelnumbers\'01;}\fi-360\li1440\lin1440 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid201\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid301\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid4}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sa80\partightenfactor0
+
+\f0\fs69\fsmilli34667 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Distributed In-Memory Data Storage and Loader
+\f1\fs24 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\fs32 \cf3 \strokec3 Introduction
+\f2\b\fs24 \cf0 \strokec2 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b0\fs29\fsmilli14667 \cf0 You are tasked with implementing a distributed key-value storage and loading system. Each record must be uniquely owned and stored on a single partition or node without replication. The objective is to achieve an even distribution of data across all available (mock) nodes in the cluster.
+\f1\fs24 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f0\fs32 \cf3 \strokec3 Workflow
+\f2\b\fs24 \cf0 \strokec2 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b0\fs29\fsmilli14667 \cf0 The loading process consists of the following steps:
+\f1\fs24 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0
+\f0\fs29\fsmilli14667 \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Schema Setup: Use config file to specify the schema, consider data types: string, int32.\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Data Preparation: Prepare a data file on some or all mock nodes in the cluster, at least 100MB for each file, and may have duplication.\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Cluster Start: Start server processes on all mock nodes in the cluster.\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	4	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Local Reading: Every node reads a local data file existing on some or all cluster nodes.\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	5	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Record Transfer: Nodes store local records or transfer them to the specific node that owns that record based on the distribution logic.\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	6	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Statistics: Once the load job finishes, the system must print statistics, including the total number of records loaded per node.\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	7	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Verification: Provide output confirming successful loading and evidence that records are stored on their corresponding owned nodes.\
+\pard\pardeftab720\sa106\partightenfactor0
+
+\fs32 \cf3 \strokec3 Requirements
+\f2\b\fs24 \cf0 \strokec2 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls2\ilvl0
+\f0\b0\fs29\fsmilli14667 \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Implement this in 
+\f3\b C++
+\f0\b0 .\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 The cluster can be deployed with (mock, not actual) 1 to 5 nodes depending on configuration.\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Schema:\
+\pard\tx940\tx1440\pardeftab720\li1440\fi-1440\partightenfactor0
+\ls2\ilvl1\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 The schema can contain data types: string, int32, also depending on configuration.\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls2\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	4	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Coding:\
+\pard\tx940\tx1440\pardeftab720\li1440\fi-1440\partightenfactor0
+\ls2\ilvl1\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 For network I/O: mock functions for POSIX/Berkeley sockets, eg: connect(), send(), recv().\
+\ls2\ilvl1\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 The system should be optimized for distributed memory usage and efficient network transfers between mock nodes.\
+\ls2\ilvl1\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Please write the code as cleanly as possible with good structure and re-usability.\'a0\
+\ls2\ilvl1\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	4	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Comment whenever needed for both the code and scripts to start the program. Please also provide some explanations for your algorithms.\
+\ls2\ilvl1\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	5	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Please automate(with shell) as much as possible on building/running the program(s).\
+\ls2\ilvl1\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	6	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Please do this yourself and do not share/copy the question/answer on the Internet/forums. We will verify the originality of the solution in the following rounds of interviews.\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls2\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	5	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Publish:\
+\pard\tx940\tx1440\pardeftab720\li1440\fi-1440\partightenfactor0
+\ls2\ilvl1\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Package the source code, build scripts, start scripts, instructions to run the program(s).\
+\pard\tx940\tx1440\pardeftab720\li1440\fi-1440\partightenfactor0
+\ls2\ilvl1
+\f3\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Please do not make the code public on Github. If you are going to use Github, make the project private and add me as a collaborator of the project.
+\f0\b0 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls2\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	6	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Documentation:\
+\pard\tx940\tx1440\pardeftab720\li1440\fi-1440\partightenfactor0
+\ls2\ilvl1
+\f3\b \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Have detailed instructions on how to run and verify the correctness of the program
+\f0\b0 . Try to make it as simple as possible.\
+\pard\tx940\tx1440\pardeftab720\li1440\fi-1440\partightenfactor0
+\ls2\ilvl1\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Please provide clear documentation(in English) on the overall workflow and architecture of your program.\'a0\
+\pard\pardeftab720\sa106\partightenfactor0
+
+\fs32 \cf3 \strokec3 Grading criteria\'a0
+\f2\b\fs24 \cf0 \strokec2 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls3\ilvl0
+\f0\b0\fs29\fsmilli14667 \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Correctness. The program needs to produce the correct output.\
+\ls3\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Performance. The faster the better.\
+\ls3\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Code cleanness. Treat it as production code with good structure and naming.\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf0 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f0\fs32 \cf3 \strokec3 Bonus points
+\f2\b\fs24 \cf0 \strokec2 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls4\ilvl0
+\f0\b0\fs29\fsmilli14667 \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Use modern C++ (C++14 or later) best practices.\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Analyze where the major bottlenecks are and explain why.\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Discuss scalability plans for handling massive datasets across hundreds of machines.\
+\pard\pardeftab720\sa106\partightenfactor0
+
+\fs32 \cf3 \strokec3 Timeline\'a0
+\f2\b\fs24 \cf0 \strokec2 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b0\fs29\fsmilli14667 \cf0 You have 
+\f3\b 7 days
+\f0\b0  to finish this project starting from receiving this email. Turning in the earlier the better. Feel free to send us whatever you have achieved if you don\'92t have a working solution by the end of the given time.
+\f1\fs24 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f0\fs32 \cf3 \strokec3 Reference link\'a0
+\f2\b\fs24 \cf0 \strokec2 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b0\fs29\fsmilli14667 \cf0 C++ Reference:{\field{\*\fldinst{HYPERLINK "https://en.cppreference.com/"}}{\fldrslt \cf4  \cf5 \ul \ulc5 \strokec5 https://en.cppreference.com/}}
+\f1\fs24 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+}
